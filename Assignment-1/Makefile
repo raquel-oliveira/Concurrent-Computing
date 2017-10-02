@@ -36,7 +36,7 @@ CFLAGS=-Wall -pedantic -std=c++11 -I. -I$(INC_DIR)
 
 # Define o alvo (target) para a compilacao completa e os alvos
 # de dependencia. Ao final da compilacao, remove os arquivos objeto.
-all: init noThread
+all: init multimat_sequencial
 
 debug: CFLAGS += -g -O0
 debug: all
@@ -49,12 +49,12 @@ init:
 
 # Alvo (target) para a construcao do executavel create1
 # Define o arquivo build/noThread.o como dependencia
-noThread: $(OBJ_DIR)/mainNoThread.o
-	$(CC) $(CFLAGS) -o noThread $^
-	@echo "Executavel ./noThreas criado\n"
+multimat_sequencial: $(OBJ_DIR)/sequencial.o
+	$(CC) $(CFLAGS) -o multimat_sequencial $^
+	@echo "Executavel ./multimat_sequencial criado\n"
 
 # Define o arquivo src/main.cpp como dependencia
-$(OBJ_DIR)/mainNoThread.o: $(SRC_DIR)/mainNoThread.cpp $(INC_DIR)/matrix.h
+$(OBJ_DIR)/sequencial.o: $(SRC_DIR)/multimat_sequencial.cpp $(INC_DIR)/matrix.h
 	$(CC) -c $(CFLAGS) -o $@ $<
 
 # Alvo (target) para a geração automatica de documentacao
