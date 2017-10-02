@@ -36,7 +36,7 @@ CFLAGS=-Wall -pedantic -std=c++11 -I. -I$(INC_DIR)
 
 # Define o alvo (target) para a compilacao completa e os alvos
 # de dependencia. Ao final da compilacao, remove os arquivos objeto.
-all: init multimat_sequencial
+all: init multimat_sequencial multimat_concorrente
 
 debug: CFLAGS += -g -O0
 debug: all
@@ -47,7 +47,7 @@ init:
 	@mkdir -p $(BIN_DIR)/
 	@mkdir -p $(OBJ_DIR)/
 
-# Alvo (target) para a construcao do executavel create1
+# Alvo (target) para a construcao do executavel multimat_sequencial
 # Define o arquivo build/noThread.o como dependencia
 multimat_sequencial: $(OBJ_DIR)/sequencial.o
 	$(CC) $(CFLAGS) -o multimat_sequencial $^
@@ -55,6 +55,16 @@ multimat_sequencial: $(OBJ_DIR)/sequencial.o
 
 # Define o arquivo src/main.cpp como dependencia
 $(OBJ_DIR)/sequencial.o: $(SRC_DIR)/multimat_sequencial.cpp $(INC_DIR)/matrix.h
+	$(CC) -c $(CFLAGS) -o $@ $<
+
+# Alvo (target) para a construcao do executavel multimat_concorrente
+# Define o arquivo build/noThread.o como dependencia
+multimat_concorrente: $(OBJ_DIR)/concorrente.o
+	$(CC) $(CFLAGS) -o multimat_concorrente $^ -lpthread
+	@echo "Executavel ./multimat_concorrente criado\n"
+
+# Define o arquivo src/main.cpp como dependencia
+$(OBJ_DIR)/concorrente.o: $(SRC_DIR)/multimat_concorrente.cpp $(INC_DIR)/matrix.h
 	$(CC) -c $(CFLAGS) -o $@ $<
 
 # Alvo (target) para a geração automatica de documentacao
