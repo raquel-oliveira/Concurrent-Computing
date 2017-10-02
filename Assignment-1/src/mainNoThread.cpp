@@ -1,51 +1,78 @@
 #include "matrix.h"
-#include <iostream>
+#include <iostream>     // std::cout
+#include <sstream>      // std::stringstream
+#include <fstream>      // std::ifstream
 
-int main(void) {
+#define PATH "data/"
+#define EXTENSION ".txt"
 
-    util::Matrix<double> m1 {6, 6, 1.0};
-    std::cout << m1;
+template<typename TField>
+void fillMatrix(util::Matrix<TField> &matrix, std::ifstream& fileContent){
+  std::string input = ""; // Input line
 
-    util::Matrix<double> m2 {6, 1.0};
-    std::cout << m2;
+  //Return to begin of file to check size
+  fileContent.clear(); fileContent.seekg(0, std::ios::beg);
+  getline(fileContent, input);
+  int n = stoi(input); // row/column value (only first number because all matrices are square)
+  if (matrix.rows != n || matrix.cols != n){
+    fprintf(stderr,"Matrix created has not same size as defined in file.\n Try again\n");
+    exit(EXIT_FAILURE);
+  }
 
-    util::Matrix<double> m3 = m1 * m2;
-    std::cout << m3;
+  //Fill Matrix
+  std::stringstream ss;
+  TField value; //mxn temporary value
+  int row = 0;
+  while(getline(fileContent, input)){
+    ss << input;
+    for (int j = 0; j < n ; j++){
+      ss >> value;
+      matrix[row][j] = value;
+    }
+    row++;
 
-    m2 += m1;
-    m2 += m1;
-    std::cout << m2;
-    std::cout << m1;
+    ss.str(std::string()); ss.clear();
+  }
+}
 
-    m2 -= m1;
-    std::cout << m2;
+int main(int argn, char ** argc) {
+    auto start = std::chrono::steady_clock::now();
+    std::string dimension = ""; // dimension of matrices
+    std::string path1 = PATH; // Path of first matrix
+    std::string path2 = PATH; // Path of second matrix
+    if (argn != 2){
+      fprintf(stderr,"Number of input incorrect");
+      exit(EXIT_FAILURE);
+    } else {
+      if(argn > 1){
+        dimension = argc[1];
+        std::string path ;// endFile(dimension);
+        path1 += "A"+ dimension + "x" + dimension + EXTENSION;
+        path2 += "B"+ dimension + "x" + dimension + EXTENSION;
+      }
+    }
 
-    util::Matrix<double> m4 {1, 2, 3};
-    util::Matrix<double> m5 {2, 1, 3};
-    util::Matrix<double> m6 = m4 * m5;
-    std::cout << m6;
+    //Check if matrices exists
+    std::ifstream matrixA_txt(path1);
+    std::ifstream matrixB_txt(path2);
+    if (matrixA_txt.fail() || matrixB_txt.fail()){
+      fprintf(stderr,"Error trying to open file(matrix) \n Try again\n");
+      exit(EXIT_FAILURE);
+    }
 
-    util::Matrix<double> m7 = 0.5 * m1;
-    util::Matrix<double> m8 = m1 * 0.5;
-
-    std::cout << m7;
-    std::cout << m8;
-
-    m7 = 0.5 * m4;
-
-    std::cout << m7;
-
-    util::Matrix<double> m9 {5};
-    std::cout << m9;
-
-    util::Matrix<double> m10 {{1,2,3},{4,5,6},{7,8,9}};
-    std::cout << m10;
-    std::cout << m10.isSymmetric() << std::endl;
-
-    // Testing [] operator
-	std::cout << m9[1][0] << std::endl;
-	m9[4][0] = 4;
-	std::cout << m9[1][0] << std::endl;
-
-    return 0;
+    //Read First Matrix
+    std::string input = ""; // Input line
+    getline(matrixA_txt, input);
+    int n = stoi(input); //only first number because all matrices are square
+    util::Matrix<double> matrixA{n};
+    fillMatrix(matrixA, matrixA_txt);
+    //Read Second Matrix
+    getline(matrixB_txt, input);
+    n = stoi(input);
+    util::Matrix<double> matrixB{n};
+    fillMatrix(matrixB, matrixB_txt);
+    std::cout << matrixA << "\n" << matrixB;
+    auto end = std::chrono::steady_clock::now();
+    std::chrono::duration<double, std::milli> duration = (end - start);
+    std::cout << "Duration: " << duration.count() << std::endl;
 }
