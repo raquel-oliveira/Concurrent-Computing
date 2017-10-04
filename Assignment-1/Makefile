@@ -53,9 +53,10 @@ multimat_sequencial: $(OBJ_DIR)/sequencial.o
 	$(CC) $(CFLAGS) -o multimat_sequencial $^
 	@echo "Executavel ./multimat_sequencial criado\n"
 
-# Define o arquivo src/main.cpp como dependencia
-$(OBJ_DIR)/sequencial.o: $(SRC_DIR)/multimat_sequencial.cpp $(INC_DIR)/matrix.h
+# Define o arquivo src/multimat_sequencial.cpp como dependencia
+$(OBJ_DIR)/sequencial.o: $(SRC_DIR)/multimat_sequencial.cpp $(INC_DIR)/matrix.h $(INC_DIR)/util.h
 	$(CC) -c $(CFLAGS) -o $@ $<
+
 
 # Alvo (target) para a construcao do executavel multimat_concorrente
 # Define o arquivo build/noThread.o como dependencia
@@ -64,7 +65,7 @@ multimat_concorrente: $(OBJ_DIR)/concorrente.o
 	@echo "Executavel ./multimat_concorrente criado\n"
 
 # Define o arquivo src/main.cpp como dependencia
-$(OBJ_DIR)/concorrente.o: $(SRC_DIR)/multimat_concorrente.cpp $(INC_DIR)/matrix.h
+$(OBJ_DIR)/concorrente.o: $(SRC_DIR)/multimat_concorrente.cpp $(INC_DIR)/matrix.h $(INC_DIR)/util.h
 	$(CC) -c $(CFLAGS) -o $@ $<
 
 # Alvo (target) para a geração automatica de documentacao

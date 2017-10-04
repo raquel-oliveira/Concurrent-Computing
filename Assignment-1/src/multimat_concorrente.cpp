@@ -1,41 +1,14 @@
 #include "matrix.h"
 #include <iostream>     // std::cout
-#include <sstream>      // std::stringstream
 #include <fstream>      // std::ifstream
 #include <thread>
 #include <vector>
+#include "util.h"       // fillMatrix
+
 
 #define PATH "data/"
 #define EXTENSION ".txt"
 #define NUMBER_THREADS 4
-template<typename TField>
-void fillMatrix(util::Matrix<TField> &matrix, std::ifstream& fileContent){
-  std::string input = ""; // Input line
-
-  //Return to begin of file to check size
-  fileContent.clear(); fileContent.seekg(0, std::ios::beg);
-  getline(fileContent, input);
-  int n = stoi(input); // row/column value (only first number because all matrices are square)
-  if (matrix.rows != n || matrix.cols != n){
-    fprintf(stderr,"Matrix created has not same size as defined in file.\n Try again\n");
-    exit(EXIT_FAILURE);
-  }
-
-  //Fill Matrix
-  std::stringstream ss;
-  TField value; //mxn temporary value
-  int row = 0;
-  while(getline(fileContent, input)){
-    ss << input;
-    for (int j = 0; j < n ; j++){
-      ss >> value;
-      matrix[row][j] = value;
-    }
-    row++;
-
-    ss.str(std::string()); ss.clear();
-  }
-}
 
 //Minimum sub-task to multiplication (specification)
 template<typename TField>
@@ -62,7 +35,7 @@ util::Matrix<TField> multiplication(const util::Matrix<TField> _a, const util::M
     }
 
     for(auto& t : threads) {
-      t.detach(); //Doesn't need to wait thread finishes to continue. Otherwise, change to join()
+      t.join();
     }
     return prod;
 }
