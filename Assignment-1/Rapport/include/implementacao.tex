@@ -1,0 +1,63 @@
+
+%Detalhes de implementação Descrever como foi feita a sua implementação em termos de arquivos, funções/métodos, etc. e como o programa funciona de uma maneira geral.
+\section{Implementação}
+As implementações dos códigos foram feitas na linguagem \textit{C++}.
+Para computarmos o tempo, foi usada a biblioteca chrono\footnote{http://www.cplusplus.com/reference/chrono/}. Uma classe \textit{Matrix} foi criada para representar uma matrix, uma versão dessa classe já tinha sido previamente parcialmente implementada para outra disciplina e pode ser verificada no \href{https://github.com/raquel-oliveira/numerical-analysis}{repositório numerical-analysis} no github, essa classe faz uso de template e já possui diversos métodos, que fazem jus ao nome da classe, implementados. A multiplicação do algoritmo sequencial foi feita usando a sobrecarga do operador * e para o algoritmo que faz uso de concorrência foi criado dois métodos, um responsável por fazer a atualização da matriz para determinados elementos da matriz resultante e outro(multiply) responsável por ser chamar o método anterior(multiplyAtomic) dado o número de threads que for ser usado.\\
+O número de threads que é aceito pelo programa é igual ao número de linhas e colunas das matrizes, dado o fato do procedimento que é realizado para a multiplicação de matrizes. Caso o número de threads seja menor que o número de linhas\footnote{ou colunas já que se trata de uma matriz quadrada}. O número de operações atômicas(multiplicação de uma linha por uma coluna que resulta em uma célula da matriz produto) é determinado pelo seguinte cálculo:
+%\setminted{fontsize=\small,baselinestretch=1}
+\begin{equation*}
+   nb\_op = \frac{num\_linhas \times num\_colunas}{num\_threads}
+\end{equation*}
+Para a última thread o cálculo tem uma alteração para que ela possua o valor do restante das operações(atômicas) que não foram realizadas:
+\begin{align*}
+   nb\_op = &\frac{num\_linhas \times num\_colunas}{num\_threads} +\\ &(num\_linhas \times num\_colunas) \% num\_threads
+\end{align*}
+Ao usar threads, usamos a chamada \textit{join()} de forma que possamos garantir que tudo já tenha sido computado antes que o programa chegue ao fim, ou seja, é a forma que temos para confirmar que todo o fluxo execução destinado aquela thread foi computado. Caso tivéssemos usado a chamada \textit{detach()} não poderíamos garantir isso, normalmente esse mecanismo é indicado para coisas que queremos que rode em \textit{background}.
+\vfill
+\subsection{Organização}\label{ssec:org}
+for tree={font=\sffamily, grow'=0,
+	folder indent=1em, folder icons,
+}
+[Concurrent-Computing
+	[Assignment-1
+		[data
+		%[$\vdots$, is file]
+		]
+		[include
+			[matrix.h, is file]
+			[util.h, is file]
+		]
+		[output
+		%[$\vdots$, is file]
+		]
+		[src
+			[matrix.inl, is file]
+			[multimat\_concorrente.cpp, is file]
+			[multimat\_sequencial.cpp, is file]
+			[util.inl, is file]
+		]
+		[.gitignore, is file]
+		[Makefile, is file]
+		[Pratica-Threads.pdf, is file]
+	]
+]
+\subsection{Como executar}
+Uma vez dentro do diretório \textit{Assignment-1} basta excutar o comando:
+\begin{minted}{bash}
+  $ make
+\end{minted}
+que será criado dois executáveis:
+\textbf{multimat\_sequencial} e \textbf{multimat\_concorrente}.
+Ele funciona da mesma forma como descrita na especificação do projeto:
+``O programa principal deverá ser executado via linha de comando da seguinte forma:
+\begin{minted}{bash}
+ $./multimat_sequencial 2
+\end{minted}
+em que o número inteiro seguido do nome do programa representa a dimensão das matrizes quadradas que serão tratadas pelo programa. Todas as matrizes utilizadas como casos de teste para este trabalho possuem dimensões como potências de base 2, logo qualquer valor fornecido como argumento de linha de comando ao programa deve atender a essa restrição. No caso da solução concorrente, o programa principal deverá ser executado via linha de comando da seguinte forma:
+\begin{minted}{bash}
+$ ./multimat_concorrente 2 2
+\end{minted}
+em que os números inteiros seguidos do nome do programa representam, respectivamente, a dimensão
+das matrizes quadradas que serão tratadas pelo programa e o número de threads a serem
+utilizadas." No caso da solução concorrente, caso não seja definido o número de threads ele vai setado com o valor máximo (definido pela constante \textbf{NUMBER\_THREADS}(10) e caso a dimensão da matriz seja menor que a constante, o número de threads é igual ao valor máximo(número de colunas/linhas) dado que a a sub-tarefa mínima para uma thread é o cálculo de um elemento da matriz produto, ou seja, a multiplicação de uma linha por uma coluna.\\
+Os documentos de entrada devem estar dentro da pasta \textit{data} e as matriz resultante da multiplicação se encontra na pasta \textit{output}, ambas as pastas já estão previamente criadas e é possível verificar a hierarquia na seção \ref{ssec:org}.\\
