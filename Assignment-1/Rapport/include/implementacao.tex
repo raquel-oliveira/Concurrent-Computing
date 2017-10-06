@@ -15,32 +15,39 @@ Para a última thread o cálculo tem uma alteração para que ela possua o valor
 Ao usar threads, usamos a chamada \textit{join()} de forma que possamos garantir que tudo já tenha sido computado antes que o programa chegue ao fim, ou seja, é a forma que temos para confirmar que todo o fluxo execução destinado aquela thread foi computado. Caso tivéssemos usado a chamada \textit{detach()} não poderíamos garantir isso, normalmente esse mecanismo é indicado para coisas que queremos que rode em \textit{background}.
 \vfill
 \subsection{Organização}\label{ssec:org}
-for tree={font=\sffamily, grow'=0,
-	folder indent=1em, folder icons,
-}
-[Concurrent-Computing
-	[Assignment-1
-		[data
-		%[$\vdots$, is file]
+
+\begin{forest}
+	pic dir tree,
+	where level=0{}{% folder icons by default; override using file for file icons
+		directory,
+	},
+	[Concurrent-Computing
+		[Assignment-1
+			[data
+			%[$\vdots$]
+			]
+			[include
+				[matrix.h, file]
+				[util.h, file]
+			]
+			[output
+			%[$\vdots$]
+			]
+			[Rapport
+			%[$\vdots$]
+			]
+			[src
+				[matrix.inl, file]
+				[multimat\_concorrente.cpp, file]
+				[multimat\_sequencial.cpp, file]
+				[util.inl, file]
+			]
+			[Makefile, file]
+			[Pratica-Threads.pdf, file]
+			[Relatorio\_\_\_Concorrente, file]
 		]
-		[include
-			[matrix.h, is file]
-			[util.h, is file]
-		]
-		[output
-		%[$\vdots$, is file]
-		]
-		[src
-			[matrix.inl, is file]
-			[multimat\_concorrente.cpp, is file]
-			[multimat\_sequencial.cpp, is file]
-			[util.inl, is file]
-		]
-		[.gitignore, is file]
-		[Makefile, is file]
-		[Pratica-Threads.pdf, is file]
 	]
-]
+\end{forest}
 \subsection{Como executar}
 Uma vez dentro do diretório \textit{Assignment-1} basta excutar o comando:
 \begin{minted}{bash}
