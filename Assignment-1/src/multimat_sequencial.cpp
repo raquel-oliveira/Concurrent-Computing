@@ -46,6 +46,6 @@ int main(int argn, char ** argc) {
 
     util::Matrix<double> matrixC = matrixA * matrixB;
     auto end = std::chrono::steady_clock::now();
-    std::chrono::duration<double, std::milli> duration = (end - start);
-    std::cout << "Duration: " << duration.count() << std::endl;
+    std::chrono::duration<double> duration = (end - start);
+    std::cout << "Duration matrix " << n << " : " << duration.count() << std::endl;
 }
