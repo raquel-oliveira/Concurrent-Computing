@@ -42,10 +42,6 @@ int main(int argn, char ** argc) {
     std::string input = ""; // Input line
     getline(matrixA_txt, input);
     int n = stoi(input); //only first number because all matrices are square
-    if (nb_threads > n){
-      fprintf(stderr,"Number of threads must be less than number of rows/colum\n");
-      exit(EXIT_FAILURE);
-    }
     util::Matrix<double> matrixA{n};
     fillMatrix(matrixA, matrixA_txt);
 
@@ -55,13 +51,18 @@ int main(int argn, char ** argc) {
     util::Matrix<double> matrixB{n};
     fillMatrix(matrixB, matrixB_txt);
 
-    if (nb_threads == 0) {
+    if (nb_threads == 0) { //wasn't set
       nb_threads = (n > NUMBER_THREADS) ? NUMBER_THREADS : n;
+    } else{
+      if (nb_threads > n){
+        fprintf(stderr,"Number of threads must be less than number of rows/colum\n");
+        exit(EXIT_FAILURE);
+        //nb_threads = n;
+      }
     }
-    std::cout << "Number of threads: " << nb_threads << std::endl;
     util::Matrix<double> matrixC = matrixA.multiply(matrixB, nb_threads);
     writeMatrix(matrixC);
     auto end = std::chrono::steady_clock::now();
     std::chrono::duration<double, std::milli> duration = (end - start);
-    std::cout << duration.count() << std::endl;
+    std::cout << "Number of threads(" << nb_threads << ") " << duration.count() << std::endl;
 }
