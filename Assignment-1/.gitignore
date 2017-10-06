@@ -459,7 +459,7 @@ TSWLatexianTemp*
 multimat_concorrente
 multimat_sequencial
 */path.pdf
-
+output/*.txt
 ### Auxiliar files
 
 script.sh

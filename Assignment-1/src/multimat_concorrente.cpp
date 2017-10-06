@@ -5,8 +5,6 @@
 #include <vector>
 #include "util.h"       // fillMatrix
 
-#define PATH "data/"
-#define EXTENSION ".txt"
 #define NUMBER_THREADS 10
 
 int main(int argn, char ** argc) {
@@ -62,7 +60,7 @@ int main(int argn, char ** argc) {
     }
     std::cout << "Number of threads: " << nb_threads << std::endl;
     util::Matrix<double> matrixC = matrixA.multiply(matrixB, nb_threads);
-
+    writeMatrix(matrixC);
     auto end = std::chrono::steady_clock::now();
     std::chrono::duration<double, std::milli> duration = (end - start);
     std::cout << duration.count() << std::endl;

@@ -3,9 +3,6 @@
 #include <fstream>      // std::ifstream
 #include "util.h"       // fillMatrix
 
-#define PATH "data/"
-#define EXTENSION ".txt"
-
 int main(int argn, char ** argc) {
     auto start = std::chrono::steady_clock::now();
     std::string dimension = ""; // dimension of matrices
@@ -45,6 +42,7 @@ int main(int argn, char ** argc) {
     fillMatrix(matrixB, matrixB_txt);
 
     util::Matrix<double> matrixC = matrixA * matrixB;
+    writeMatrix(matrixC);
     auto end = std::chrono::steady_clock::now();
     std::chrono::duration<double> duration = (end - start);
     std::cout << "Duration matrix " << n << " : " << duration.count() << std::endl;
