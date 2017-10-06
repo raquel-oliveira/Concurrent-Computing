@@ -5,40 +5,9 @@
 #include <vector>
 #include "util.h"       // fillMatrix
 
-
 #define PATH "data/"
 #define EXTENSION ".txt"
-#define NUMBER_THREADS 4
-
-//Minimum sub-task to multiplication (specification)
-template<typename TField>
-void multiplicationMin(const util::Matrix<TField> _a, const util::Matrix<TField> _b, util::Matrix<TField> &c, int line) {
-      for (int j = 0; j < _b.cols; ++j) {
-        c[line][j] = 0;
-          for (int k = 0; k < _a.cols; ++k) {
-              c[line][j] = c[line][j] + _a[line][k] * _b[k][j];
-          }
-      }
-}
-
-
-template<typename TField>
-util::Matrix<TField> multiplication(const util::Matrix<TField> _a, const util::Matrix<TField> _b) {
-    // Check multiplication condition
-    //if (_a.cols != _b.rows)
-    //    throw std::logic_error("You must provide matrices mxn and nxp.");
-    // Multiply
-    util::Matrix<TField> prod {_a.rows, _b.cols, 0};
-    std::vector<std::thread> threads;
-    for (int i = 0; i < _a.rows; ++i) {
-      threads.push_back(std::thread(multiplicationMin<TField>,std::ref(_a), std::ref(_b), std::ref(prod), i));
-    }
-
-    for(auto& t : threads) {
-      t.join();
-    }
-    return prod;
-}
+#define NUMBER_THREADS 10
 
 int main(int argn, char ** argc) {
     auto start = std::chrono::steady_clock::now();
@@ -46,7 +15,7 @@ int main(int argn, char ** argc) {
     std::string path1 = PATH; // Path of first matrix
     std::string path2 = PATH; // Path of second matrix
     int nb_threads;
-    if (argn != 3){
+    if (argn > 3 || argn < 2){
       fprintf(stderr,"Number of input incorrect");
       exit(EXIT_FAILURE);
     } else {
@@ -57,7 +26,9 @@ int main(int argn, char ** argc) {
         path2 += "B"+ dimension + "x" + dimension + EXTENSION;
       }
       if (argn > 2){
-        nb_threads = (atoi(argc[2]) > 0) ? atoi(argc[2]) : NUMBER_THREADS; //TODO: use value
+        nb_threads = (atoi(argc[2]) > 0) ? atoi(argc[2]) : 0;
+      } else{
+        nb_threads = 0; //Will be updated after read file input of matrix
       }
     }
 
@@ -73,6 +44,10 @@ int main(int argn, char ** argc) {
     std::string input = ""; // Input line
     getline(matrixA_txt, input);
     int n = stoi(input); //only first number because all matrices are square
+    if (nb_threads > n){
+      fprintf(stderr,"Number of threads must be less than number of rows/colum\n");
+      exit(EXIT_FAILURE);
+    }
     util::Matrix<double> matrixA{n};
     fillMatrix(matrixA, matrixA_txt);
 
@@ -82,10 +57,13 @@ int main(int argn, char ** argc) {
     util::Matrix<double> matrixB{n};
     fillMatrix(matrixB, matrixB_txt);
 
-
-    util::Matrix<double> matrixC = multiplication(matrixA, matrixB);
+    if (nb_threads == 0) {
+      nb_threads = (n > NUMBER_THREADS) ? NUMBER_THREADS : n;
+    }
+    std::cout << "Number of threads: " << nb_threads << std::endl;
+    util::Matrix<double> matrixC = matrixA.multiply(matrixB, nb_threads);
 
     auto end = std::chrono::steady_clock::now();
     std::chrono::duration<double, std::milli> duration = (end - start);
-    std::cout << "Duration: " << duration.count() << std::endl;
+    std::cout << duration.count() << std::endl;
 }

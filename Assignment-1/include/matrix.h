@@ -21,8 +21,8 @@
  * work, but maybe without any meaning.
  *
  * @author      Vitor Greati, Vinicius Campos, Raquel Oliveira
- * @date        2017-03-07
- * @version     1.0
+ * @date        2017-10-06
+ * @version     1.1
  * */
 
 namespace util {
@@ -179,6 +179,27 @@ class Matrix {
          * @param _rhs  The matrix to right-multiply this matrix.
          * */
         Matrix<TField> operator*(const Matrix<TField> & _rhs);
+
+        /**
+        *
+        * Update value of @param _c with partial multiplication of this matriz with @param _b
+        *
+        * @param _b             The matrix to right-multiply this matrix.
+        * @param _c             The matrix product with the values to be updated
+        * @param line_b         Initial line to do the multiplication
+        * @param line_e         Last line to do the multiplication
+        * @param col_b          Initial col to do the multiplication
+        * @param col_e          Last col to do the multiplication
+        * */
+        void multiplyAtomic(const util::Matrix<TField> _b, util::Matrix<TField> &c, int line_b,int col_b, int nb_op);
+
+        /**
+         * Method to multiply matrices using threads.
+         *
+         * @param _rhs          The matrix to right-multiply this matrix.
+         * @param nb_threas     Number of threads to be used
+         * */
+        Matrix<TField> multiply(const util::Matrix<TField> _rhs, int nb_threads);
 
         /**
          * Operator for assignment.

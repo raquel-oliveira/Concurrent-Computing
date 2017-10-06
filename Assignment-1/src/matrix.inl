@@ -3,6 +3,8 @@
 #include <iostream>
 #include <iomanip>
 #include <cmath>
+#include <vector>
+#include <thread>
 
 template<typename TField>
 util::Matrix<TField>::Matrix(const int & _m, const int & _n, const TField & _initial) : rows {_m}, cols {_n} {
@@ -186,6 +188,51 @@ util::Matrix<TField> util::Matrix<TField>::operator*(const Matrix<TField> & _rhs
     }
     return prod;
 }
+
+
+template<typename TField>
+void util::Matrix<TField>::multiplyAtomic(const util::Matrix<TField> _b, util::Matrix<TField> &c, int line_b,int col_b, int nb_op) {
+    for (int k = 0; k < nb_op; ++k) {
+        int i = line_b + (col_b+k)/_b.cols;
+        int j = (col_b+k)%_b.cols;
+        for (int k = 0; k < cols; ++k) {
+            c[i][j] = c[i][j] + this->data[i][k] * _b[k][j];
+        }
+    }
+}
+
+
+template<typename TField>
+util::Matrix<TField> util::Matrix<TField>::multiply(const util::Matrix<TField> _rhs, int nb_threads) {
+    // Check multiplication condition
+    if (cols != _rhs.rows)
+        throw std::logic_error("You must provide matrices mxn and nxp.");
+    if (nb_threads > _rhs.cols)
+        throw std::logic_error("Number of threads must be at maximum number of rows/cols.");
+    // Multiply
+    int nb_multiplications = rows *_rhs.cols;
+    int nb_op = nb_multiplications / nb_threads;
+    util::Matrix<TField> prod {rows, _rhs.cols, 0};
+    std::vector<std::thread> threads;
+    int line_b = 0; int line_e = 0;
+    int col_b = 0; int col_e = 0;
+    for(int i = nb_op - 1; i < nb_multiplications; i+=nb_op){
+        if(i + nb_op >= nb_multiplications){ //last thread
+            nb_op += nb_multiplications%nb_threads;
+        } else { //default
+            line_e = line_b + (line_b+nb_op)/_rhs.cols;
+            col_e = (col_b +nb_op) % _rhs.cols -1;
+        }
+        threads.push_back(std::thread(&util::Matrix<TField>::multiplyAtomic, this, std::ref(_rhs), std::ref(prod), line_b, col_b, nb_op));
+        line_b = line_e+(col_e +1)/_rhs.cols;
+        col_b = (col_e+1)% _rhs.cols;
+    }
+    for(auto& t : threads) {
+      t.join();
+    }
+    return prod;
+}
+
 
 template<typename TField>
 util::Matrix<TField> & util::Matrix<TField>::operator=(Matrix<TField> m) {
