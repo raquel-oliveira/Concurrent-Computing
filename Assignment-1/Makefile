@@ -28,7 +28,7 @@ OBJ_DIR=build
 DOC_DIR=doc
 
 # Opcoes de compilacao
-CFLAGS=-Wall -pedantic -std=c++11 -I. -I$(INC_DIR)
+CFLAGS=-Wall -pedantic -std=c++11 -I. -I$(INC_DIR) -O3
 
 # Garante que os alvos desta lista nao sejam confundidos com arquivos
 # de mesmo nome
