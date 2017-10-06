@@ -1,6 +1,6 @@
 #include "util.h"
 #include "matrix.h"
-#include <fstream>      // std::ifstream
+//#include <fstream>      // std::ifstream std::ofstream (already in .h)
 #include <sstream>      // std::stringstream
 
 template<typename TField>
@@ -35,10 +35,12 @@ void fillMatrix(util::Matrix<TField> &matrix, std::ifstream& fileContent){
 
 void writeMatrix(util::Matrix<double> matrixC){
   std::string output_path = "output/C"+ std::to_string(matrixC.rows) + "x" + std::to_string(matrixC.cols) + EXTENSION;
-  std::ofstream outFile(output_path, std::fstream::out | std::ios::trunc);
-  if(!outFile){
+  std::fstream outFile;
+  outFile.open(output_path, std::fstream::out | std::ios::trunc);
+  if (outFile.is_open()){
+    outFile << matrixC;
+    outFile.close();
+  } else {
     std::cerr << "vixe, problem with " << output_path << std::endl;
   }
-  outFile << matrixC;
-  outFile.close();
 }
