@@ -1,2 +1,5 @@
 %Discussão Discutir os resultados, ou seja, o que foi possível concluir através dos resultados obtidos através dos experimentos.
 \section{Discussão}
+Claramente fiz algo errado, pois os dados dos testes não me parecem corretos. \\
+Mas o número de threads foi confirmado através do \textit{Monitor de atividade} do MacOS. Talvez o desempenho não melhore tanto depois de quatro threads por alguma limitação/configuração para o número de threads que podem ser executadas em paralelo. \\
+Para as matrizes com dimensão menor que 256x256, eu não vi muita vantagem no uso de concorrencia. A partir da dimensão 256x256 a configuração que apresentou o melhor desempenho foi usando o parâmetro ideal para as threads igual a 4.  Ainda sim não achei a melhora tão alta quanto eu tinha idealizado antes dos testes. %No entanto, alguns diferenças na execução do sequencial comparado com a abordagem concorrente, pois o valor deveria ser similar ao sequencial ou levemente pior dado o tempo de criação da thread.

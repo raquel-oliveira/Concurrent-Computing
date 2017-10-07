@@ -1,3 +1,97 @@
 %Resultados Apresentar os resultados obtidos na forma de um gráficos de linha e tabelas. Para cada solução deverá ser apresentada uma tabela contendo os tempos mínimo, médio e máximo obtidos para cada dimensão de matriz. Por sua vez, os gráficos de linha deverão exibir apenas os tempos médios obtidos nas execuções de cada solução.
+\newpage
+\onecolumn
 \section{Resultados}
 Os resultados foram lançados numa planilha para realizar a devida análise, a planilha pode ser encontrada neste \href{https://docs.google.com/a/ufrn.edu.br/spreadsheets/d/1tey8rUazIv3H-rDvTVuX3HWysaB38WmbdmQCpsBp2zY/edit?usp=sharing}{link(clique aqui)}.
+\begin{table}[!h]
+	\centering
+	\caption{Tabela - Resultados}
+	\label{Tabela Resultados}
+	\begin{tabular}{|c|c|cccc|}
+		\hline
+		\multirow{2}{*}{Dimensão} & \multirow{2}{*}{Número de Treads} & \multicolumn{4}{c}{(em milisegundos)} \\
+		&                                   & Min  & Max  & Média  & Desvio padrão  \\ \hline\hline
+		\multirow{4}{*}{4x4}      & 0                                &  0,41    &  0,58    &   0,45     &      0,04          \\
+		& 1                                 &    0,48  &   0,94   &   0,55     &  0,12              \\
+		& 2                                 &   0,53   & 1,14     & 0,59       &    0,14           \\
+		& 4                                 &   0,55   &   1,75   &   0,62     &         0,25       \\ \hline
+		\multirow{5}{*}{8x8}      & 0                                &      &      &        &                \\
+		& 1                                 &      &      &        &                \\
+		& 2                                 &      &      &        &                \\
+		& 4                                 &      &      &        &                \\
+		& 8                                 &      &      &        &                \\ \hline
+		\multirow{6}{*}{16x16}      & 0                                &      &      &        &                \\
+		& 1                                 &      &      &        &                \\
+		& 2                                 &      &      &        &                \\
+		& 4                                 &      &      &        &                \\
+		& 8                                 &      &      &        &                \\
+		& 16                                &      &      &        &                \\ \hline
+		\multirow{7}{*}{32x32}      & 0                                &      &      &        &                \\
+		& 1                                 &      &      &        &                \\
+		& 2                                 &      &      &        &                \\
+		& 4                                 &      &      &        &                \\
+		& 8                                 &      &      &        &                \\
+		& 16                                &      &      &        &                \\
+		& 32                                &      &      &        &                \\ \hline
+		\multirow{8}{*}{64x64}      & 0                                &      &      &        &                \\
+		& 1                                 &      &      &        &                \\
+		& 2                                 &      &      &        &                \\
+		& 4                                 &      &      &        &                \\
+		& 8                                 &      &      &        &                \\
+		& 16                                &      &      &        &                \\
+		& 32                                &      &      &        &                \\
+		& 64                                &      &      &        &               \\ \hline
+	\end{tabular}
+\end{table}
+\newpage
+\begin{table}[!h]
+	\centering
+	\caption{Tabela - Resultados}
+	\label{Tabela Resultados}
+	\begin{tabular}{|c|c|cccc|}
+		\hline
+		\multirow{2}{*}{Dimensão} & \multirow{2}{*}{Número de Treads} & \multicolumn{4}{c}{(em milisegundos)} \\
+		&                                   & Min  & Max  & Média  & Desvio padrão  \\ \hline\hline
+		\multirow{8}{*}{128x128}      & 0                                &      &      &       &             \\
+		& 1                                 &      &      &        &                \\
+		& 2                                 &      &      &        &                \\
+		& 4                                 &      &      &        &                \\
+		& 8                                 &      &      &        &                \\
+		& 16                                &      &      &        &                \\
+		& 32                                &      &      &        &                \\
+		& 64                                &      &      &        &               \\ \hline
+		\multirow{8}{*}{256x256}      & 0                                &      &      &        &                \\
+		& 1                                 &      &      &        &                \\
+		& 2                                 &      &      &        &                \\
+		& 4                                 &      &      &        &                \\
+		& 8                                 &      &      &        &                \\
+		& 16                                &      &      &        &                \\
+		& 32                                &      &      &        &                \\
+		& 64                                &      &      &        &               \\ \hline
+		\multirow{8}{*}{512x512}      & 0                                &      &      &        &                \\
+		& 1                                 &      &      &        &                \\
+		& 2                                 &      &      &        &                \\
+		& 4                                 &      &      &        &                \\
+		& 8                                 &      &      &        &                \\
+		& 16                                &      &      &        &                \\
+		& 32                                &      &      &        &                \\
+		& 64                                &      &      &        &               \\ \hline
+		\multirow{8}{*}{1024x1024}      & 0                                & 7.714,75     &   17.958   &  16.488,75      &  3.516,56              \\
+		& 1            &   10.934,89   & 15.776       &   14.823,35 & 964,57             \\
+		& 2                                 &      &      &        &                \\
+		& 4                                 &      &      &        &                \\
+		& 8                                 &      &      &        &                \\
+		& 16                                &      &      &        &                \\
+		& 32                                &      &      &        &                \\
+		& 64                                &    9.726,19  &  10.330,80    &    9.847,31    &     122,69          \\ \hline
+		\multirow{8}{*}{2048x2048}      & 0                                &      &      &        &                \\
+		& 1                                 &      &      &        &                \\
+		& 2                                 &      &      &        &                \\
+		& 4                                 &      &      &        &                \\
+		& 8                                 &      &      &        &                \\
+		& 16                                &      &      &        &                \\
+		& 32                                &      &      &        &                \\
+		& 64                                &      &      &        &               \\ \hline
+	\end{tabular}
+\end{table}
+\twocolumn
