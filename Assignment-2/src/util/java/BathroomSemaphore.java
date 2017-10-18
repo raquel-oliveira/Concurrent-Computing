@@ -18,12 +18,12 @@ public class BathroomSemaphore extends Bathroom implements Runnable{
            ) {
             try {
                 semaphore.acquire();
+                addPerson(p);
+                personThread.start();
+                return true;
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            addPerson(p);
-            personThread.start();
-            return true;
         }
         return false;
     }
