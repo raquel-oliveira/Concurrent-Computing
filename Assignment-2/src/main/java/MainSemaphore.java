@@ -1,3 +1,5 @@
+
+//Solution of Shared Bathroom problem
 public class MainSemaphore {
     public static void main(String args[]) throws InterruptedException {
         int capacity = 5;

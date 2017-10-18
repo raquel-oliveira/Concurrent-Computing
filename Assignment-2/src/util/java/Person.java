@@ -38,7 +38,6 @@ public class Person implements Runnable {
             if (instanceBathroom instanceof BathroomSemaphore) {
                 BathroomSemaphore bathS = (BathroomSemaphore) instanceBathroom;
                 bathS.leave(this);
-                System.out.println("------------------------------\nNum homens =" + bathS.num_men + "\nNum mulheres =" + bathS.num_women +"\nQuantas pessoas no banheiro =" + bathS.occupation_list.size() + "\nQuantas esperando: " + bathS.waiting_list.size());
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
