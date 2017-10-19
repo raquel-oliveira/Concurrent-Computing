@@ -1,0 +1,57 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{algorithm}
+\usepackage{amsmath}
+\usepackage{algpseudocode}
+\newcommand\tab[1][1cm]{\hspace*{#1}}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\setcounter{secnumdepth}{4}
+
+
+\title{Sincronização em Programas Concorrentes\\ \large DIM0612 - Programação Concorrente}
+\author{Raquel Lopes de Oliveira}
+\date{Novembro de 2017}
+\begin{document}
+
+\maketitle
+
+\section*{Introdução}
+\tab Este trabalho consistiu na elaboração de algoritmos e suas implementações para dois programas concorrentes, utilizando diferentes métodos de sincronização.\hfill \break
+\tab A linguagem utilizada para implementação foi Java, pois dispõe de mecanismos nativos para sincronização que facilitam a implementação.
+
+\section*{Solução}
+\tab Foi criado uma classe \textit{Person} que possui uma identificação para o sexo (restringindo para `Men' e `Women' para representar o sexo masculino e feminino). Essa classe implementa \textit{Runnable} e na sobrecarga do método \textit{run()} o sleep é chamado para representar o tempo que essa pessoa passa no banheiro; após, é chamado o método do banheiro responsável por permitir a saída da pessoa do banheiro.\\
+\tab Uma classe abstrata \textit{Bathroom} foi criada com as implementações em comum da representação do banheiro. Inicialmente foi pensando em ter um atributo no banheiro para representar se ele estava sendo ocupado por pessoas do SEX = Male ou SEX = Women, mas por uma questão de debug e \underline{preferencia pessoal} foi criado dois atributos, num\_men e num\_women para representar quantos homens e quantas mulheres estariam dentro do banheiro. Foi optado por usar uma ConcurrentLinkedQueue para a lista de espera para preservar a ideia de `first-in and firs-out' e uma List para as pessoas que estão dentro do banheiro, pois uma pessoa que entrou depois poderia sair antes de outra que entrou antes.\\
+
+\tab Duas soluções foram criadas, uma com o mecanismo de sincronização semáforo e outra através do monitor.
+
+\subsection*{Semáforo}
+\subsubsection*{Lógica}
+\tab Nessa solução, foi criado um semáforo para o banheiro. A capacidade do semáforo é 5, mas pode ser modificada no arquivo \textit{MainSemaphore.java}. Para realizar o experimento 3*5(3 é uma constante,multiply, definida em Bathroom e 5 a capacidade setada em MainSemaphore.java) pessoas são criadas aleatoriamente tanto em respeito ao sexo quando ao tempo de duração no banheiro(0.1 a 5.0) através do método \textit{populate()} em Bathroom.java e do construtor da classe Pessoa.\\
+Talvez a chamada do populate não precisasse estar no método \textit{run()} da classe \textit{BathroomSemaphore}, mas sim no seu construtor, por exemplo. Mas a função principal desse método é de fazer com que todas as pessoas na lista de espera possam usar o banheiro, respeitando a ordem de entrada (não pode ``furar fila") e sem permitir que pessoas de sexo distinto usem o banheiro simultaneamente.
+
+\subsubsection*{Dificuldades}
+\tab Por falta de atenção fiquei um tempo sem entender o porquê de não estar funcionando e dado a análise do contexto (observando os valores de num\_men, num\_women e demais atributos) notei que no método \textit{run()} da classe BathroomSemaphore eu estava retirando as pessoas da lista de espera, mesmo que na chamada do método \textit{receive(Person p)} a pessoa não tivesse entrado de fato do banheiro. Mas isso foi facilmente solucionando apenas mudando o retorno da função para confirmar se a pessoa em questão estava apta para entrar no banheiro e só então ser retirada da lista de espera.
+\subsubsection*{Corretude}
+\tab Para garantir que o problema esteja correto é necessário que o programa satisfaça 4 propriedades: utilização de um mecanismo de exclusão mutua; ausência de \textit{deadlock}, ausência de \textit{starvation} e a impossibilidade de fazer suposição sobre a velocidade de execução dos processos.
+\tab O semáforo é responsável por controlar quem entra e quem sai do banheiro. Ele garante que apenas o número definido na capacidade(5) seja capaz de ocupar o banheiro ao mesmo tempo.\hfill \break
+\tab Não há \textit{starvation} pois o semáforo do banheiro é com justiça; é implementada uma lógica FIFO para que as pessoas entrem na lista de espera e consequentemente possam usar o banheiro na ordem em que foi pedido/requisitado(nesse caso na ordem de criação das pessoas); além disso cada pessoa tem um tempo determinado para usar o banheiro. Não há como alguém ficar esperando indeterminadamente para usar o banheiro.\hfill \break
+\tab Através do limite de pessoas no banheiro e o fato de não permitir que se possa furar fila é possivel garantir que não haja \textit{deadlock} pois nenhuma thread ficará com um recurso impedindo outras de usar enquanto só outra poderia fazer ela liberar o recurso.
+
+\subsection*{Bloqueio Explícito}
+
+\subsubsection*{Lógica}
+\tab 
+\subsubsection*{Corretude}
+\tab 
+
+
+\section*{Análise Comparativa}
+\tab 
+
+\section*{Compilação e execução}
+\tab Foi usado o Maven para a configuração dos packages e bibliotecas. É necessário do compilador \textit{javac} e do Java 9.
+Você pode abrir o projeto em sua IDE  de preferência importando o projeto através do Maven. Ou pode executar as seguintes instruções em linha de comando:
+
+\end{document}
