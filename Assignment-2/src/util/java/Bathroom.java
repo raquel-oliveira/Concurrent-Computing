@@ -8,12 +8,12 @@ public abstract class Bathroom {
     private static final Logger LOGGER = Logger.getLogger(Bathroom.class.getName());
     static final int multiply = 3;
 
-    protected int capacity;
-    protected Queue waiting_list;
-    protected List<Person> occupation_list;
+    protected volatile int capacity;
+    protected volatile Queue waiting_list;
+    protected volatile List<Person> occupation_list;
     //Number of inside people of each sex:
-    protected int num_men;
-    protected int num_women;
+    protected volatile int num_men;
+    protected volatile int num_women;
 
     public Bathroom(int capacity){
         LOGGER.info("Logger Name: "+LOGGER.getName());
@@ -59,6 +59,8 @@ public abstract class Bathroom {
         }
         LOGGER.info("Person " + p.getId() + "("+ p.getSex() + ") is in the bathroom and will spend " + p.getTime() +"\n");
     }
+
+    public abstract void leave(Person p);
 
     /** Populate waiting list to use bathroom
      * Create 5(@multiply) times more people than allowed to use the toilet.

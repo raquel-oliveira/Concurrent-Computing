@@ -35,10 +35,7 @@ public class Person implements Runnable {
     public void run() {
         try {
             sleep((long) timeLimit); //Using bathroom to do something ( ͡° ͜ʖ ͡°)
-            if (instanceBathroom instanceof BathroomSemaphore) {
-                BathroomSemaphore bathS = (BathroomSemaphore) instanceBathroom;
-                bathS.leave(this);
-            }
+            instanceBathroom.leave(this);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
