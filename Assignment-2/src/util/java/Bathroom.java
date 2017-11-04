@@ -8,8 +8,8 @@ public abstract class Bathroom {
     private static final Logger LOGGER = Logger.getLogger(Bathroom.class.getName());
     static final int multiply = 3;
 
-    protected volatile int capacity;
-    protected volatile Queue waiting_list;
+    protected int capacity;
+    protected volatile Queue<Person> waiting_list;
     protected volatile List<Person> occupation_list;
     //Number of inside people of each sex:
     protected volatile int num_men;

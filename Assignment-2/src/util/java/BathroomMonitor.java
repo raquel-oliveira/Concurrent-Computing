@@ -12,8 +12,8 @@ public class BathroomMonitor extends Bathroom implements Runnable{
 
     public synchronized boolean receive(Person p) throws InterruptedException {
         Thread personThread = new Thread(p);
-        if (  (p.getSex() == SEX.Men && (occupation_list.isEmpty() || num_men > 0)) || //Can be used by a men
-                (p.getSex() == SEX.Women && (occupation_list.isEmpty() || num_women > 0)) //Can be used by a women
+        if (  (p.getSex() == SEX.Men && (occupation_list.isEmpty() || num_men > 0 && num_men < capacity)) || //Can be used by a men
+                (p.getSex() == SEX.Women && (occupation_list.isEmpty() || num_women > 0 && num_women < capacity)) //Can be used by a women
             ){
             addPerson(p);
             personThread.start();
@@ -34,7 +34,7 @@ public class BathroomMonitor extends Bathroom implements Runnable{
         populate();
         while(!waiting_list.isEmpty()){
             try {
-                if (receive((Person) waiting_list.peek())) {
+                if (receive(waiting_list.peek())) {
                     waiting_list.poll();
                     LOGGER.info("------------------------------\nNumero de homens =" + num_men + "\nNumero de mulheres =" + num_women +"\nQuantas pessoas no banheiro =" + occupation_list.size() + "\nQuantas esperando: " + waiting_list.size() + "\n------------------------------");
                 }

@@ -40,7 +40,7 @@ public class BathroomSemaphore extends Bathroom implements Runnable{
         populate();
         while(!waiting_list.isEmpty()){
             try {
-                if (receive((Person) waiting_list.peek())) {
+                if (receive(waiting_list.peek())) {
                     waiting_list.poll();
                     LOGGER.info("------------------------------\nNumero de homens =" + num_men + "\nNumero de mulheres =" + num_women +"\nQuantas pessoas no banheiro =" + occupation_list.size() + "\nQuantas esperando: " + waiting_list.size() + "\n------------------------------");
                 }
