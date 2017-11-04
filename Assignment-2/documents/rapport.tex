@@ -34,24 +34,32 @@ Talvez a chamada do populate não precisasse estar no método \textit{run()} da 
 \subsubsection*{Dificuldades}
 \tab Por falta de atenção fiquei um tempo sem entender o porquê de não estar funcionando e dado a análise do contexto (observando os valores de num\_men, num\_women e demais atributos) notei que no método \textit{run()} da classe BathroomSemaphore eu estava retirando as pessoas da lista de espera, mesmo que na chamada do método \textit{receive(Person p)} a pessoa não tivesse entrado de fato do banheiro. Mas isso foi facilmente solucionando apenas mudando o retorno da função para confirmar se a pessoa em questão estava apta para entrar no banheiro e só então ser retirada da lista de espera.
 \subsubsection*{Corretude}
-\tab Para garantir que o problema esteja correto é necessário que o programa satisfaça 4 propriedades: utilização de um mecanismo de exclusão mutua; ausência de \textit{deadlock}, ausência de \textit{starvation} e a impossibilidade de fazer suposição sobre a velocidade de execução dos processos.
+\tab Para garantir que o problema esteja correto é necessário que o programa satisfaça 4 propriedades: utilização de um mecanismo de exclusão mutua; ausência de \textit{deadlock}, ausência de \textit{starvation} e a impossibilidade de fazer suposição sobre a velocidade de execução dos processos.\\
 \tab O semáforo é responsável por controlar quem entra e quem sai do banheiro. Ele garante que apenas o número definido na capacidade(5) seja capaz de ocupar o banheiro ao mesmo tempo.\hfill \break
 \tab Não há \textit{starvation} pois o semáforo do banheiro é com justiça; é implementada uma lógica FIFO para que as pessoas entrem na lista de espera e consequentemente possam usar o banheiro na ordem em que foi pedido/requisitado(nesse caso na ordem de criação das pessoas); além disso cada pessoa tem um tempo determinado para usar o banheiro. Não há como alguém ficar esperando indeterminadamente para usar o banheiro.\hfill \break
 \tab Através do limite de pessoas no banheiro e o fato de não permitir que se possa furar fila é possivel garantir que não haja \textit{deadlock} pois nenhuma thread ficará com um recurso impedindo outras de usar enquanto só outra poderia fazer ela liberar o recurso.
 
-\subsection*{Bloqueio Explícito}
-
-\subsubsection*{Lógica}
-\tab 
-\subsubsection*{Corretude}
-\tab 
-
+\subsection*{Monitor}
+\subsubsection*{Lógica e Corretude}
+\tab  A lógica do monitor foi a mesma para da usada com os semáforos, mas as variavéis que sofrem mudança durante o processo foram modificadas para volateis e os métodos usados em \textit{BathroomMonitor} possuem agora na sua com assinatura o termo syncronized que permitem a prevenção de erros de consistência e  interferencia de thread. 
 
 \section*{Análise Comparativa}
-\tab 
+\tab Apesar da mudança, na implementação, ser pequena entre as duas abordagens. Eu demorei a entender a ideia do monitor e de como ter certeza que de fato a implementação estava correta. A ideia de semáforos me parece muito mais intuitiva e fácil. \\
+Inicialmente pensei em uma das abordagens ser o bloqueio explicíto, mas apesar do problema não ser tão difícil a ideia de deixar ao cargo do programador verificar se não está deixando um caso de uso de lado/esquecido aparenta ser uma escolha mais perigosa. Quando existe um mecanismo que já previne certo problemas, o programador (normalmente) tende a escolher essa abordagem.
 
 \section*{Compilação e execução}
 \tab Foi usado o Maven para a configuração dos packages e bibliotecas. É necessário do compilador \textit{javac} e do Java 9.
 Você pode abrir o projeto em sua IDE  de preferência importando o projeto através do Maven. Ou pode executar as seguintes instruções em linha de comando:
+\begin{verbatim}
+javac -d build/classes -cp build/classes src/main/java/*.java src/util/java/*.java -Xlint
+\end{verbatim}
+Para a implementação com semáforo:
+\begin{verbatim}
+java -cp build/classes/  MainSemaphore
+\end{verbatim}
+Para a implementação com monitor:
+\begin{verbatim}
+java -cp build/classes/  MainMonitor
+\end{verbatim}
 
 \end{document}
