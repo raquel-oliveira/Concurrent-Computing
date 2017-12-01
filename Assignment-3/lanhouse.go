@@ -15,9 +15,12 @@ const (
 	NUMBER_TEENAGERS = 26;
 )
 
+func init() {
+	rand.Seed(time.Now().Unix())
+}
+
 // source: source: http://golangcookbook.blogspot.com.br/2012/11/generate-random-number-in-given-range.html
 func random(min, max int) int {
-	//rand.Seed(time.Now().Unix())
 	return rand.Intn(max - min) + min
 }
 
@@ -88,14 +91,16 @@ func main(){
 
 	go waitingRoom(users, c);
 
+	/*
 	//Simulate clients randomly
-	random := rand.New(rand.NewSource(time.Now().Unix()))
-	sorted := random.Perm(NUMBER_TEENAGERS)
+	sorted := rand.Perm(NUMBER_TEENAGERS)
 
 	for i:= 0; i < NUMBER_TEENAGERS; i++ {
 		users <- teenName(sorted[i]);
+	}*/
+	for i:= 0; i < NUMBER_TEENAGERS; i++ {
+		users <- teenName(i);
 	}
-
 	//close(users);
 	wg.Wait();
 	fmt.Println("A lan-house está finalmente vazia e todos foram atendidos")
