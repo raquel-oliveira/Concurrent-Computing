@@ -61,7 +61,7 @@ func waitingRoom(in chan string, out chan string){
 	}
 }
 
-func useComputer(in chan string, wg *sync.WaitGroup){
+func useComputers(in chan string, wg *sync.WaitGroup){
 //	defer wg.Done();
 	for {
 		user, check := <-in;
@@ -83,14 +83,17 @@ func main(){
 
 	for computer := 0; computer < NUMBER_COMPUTERS; computer++ {
 		wg.Add(1);
-		go useComputer(c, &wg);
+		go useComputers(c, &wg);
 	}
 
 	go waitingRoom(users, c);
 
-	for teen := 0; teen < NUMBER_TEENAGERS ; teen++  {
-		users <- (teenName(teen));
+	//Simulate clients randomly
+	random := rand.New(rand.NewSource(time.Now().Unix()))
+	sorted := random.Perm(NUMBER_TEENAGERS)
 
+	for i:= 0; i < NUMBER_TEENAGERS; i++ {
+		users <- teenName(sorted[i]);
 	}
 
 	//close(users);

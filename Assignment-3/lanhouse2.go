@@ -96,8 +96,14 @@ func main(){
 
 	// Simulate clients
 	go func () {
-		for i := 0; i < NUMBER_TEENAGERS; i++ {
-			clients <-teenName(i);
+
+		random := rand.New(rand.NewSource(time.Now().Unix()))
+
+		sorted := random.Perm(NUMBER_TEENAGERS)
+
+		for i:= 0; i < NUMBER_TEENAGERS; i++ {
+			time.Sleep(time.Duration(rand.Int() % 20) * time.Millisecond)
+			clients <- teenName(sorted[i]);
 		}
 		done <- 1
 	}()
